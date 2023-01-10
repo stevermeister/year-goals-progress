@@ -13,23 +13,36 @@ function App() {
     { title: 'Get weight', start: 65, goal: 75},
     { title: 'Conference talk', start: 0, goal: 4},
     { title: 'Angular Meetup', start: 0, goal: 3},
-    { title: 'Chess raiting', start: 1800, goal: 2100},
+    { title: 'Chess raiting', start: 1700, goal: 2100},
     { title: 'Gym', start: 0, goal: 100},
+    { title: 'Visit NL museum', start: 0, goal: 10},
   ];
 
   const statusNumber = {
     'Visit a new country' : 0,
-    'Visit a new city' : 0,
+    'Visit a new city' : 1,
     'Swim in the sea' : 0,
-    'Read book' : 0,
+    'Read book' : 1,
     'Listen audiobook' : 0,
-    'Watch film' : 0,
+    'Watch film' : 1,
     'Get weight' : 65,
     'Conference talk' : 0,
     'Angular Meetup' : 0,
-    'Chess raiting' : 1850,
-    'Gym' : 2 
+    'Chess raiting' : 1700,
+    'Gym' : 3,
+    'Visit NL museum': 1
   }
+
+  /* LOG:
+  - gym 1
+  - gym 2
+  - gym 3
+  - city - Hilversum 9.01
+  - book - Беседы с сократом - 9.01
+  - film - Interviewing vampire - 8.01
+  - museum - van Gogh (Klimt) - 8.01
+
+  */
   
 
 
