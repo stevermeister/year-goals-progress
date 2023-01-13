@@ -13,7 +13,7 @@ function App() {
     { title: 'Get weight', start: 65, goal: 75},
     { title: 'Conference talk', start: 0, goal: 4},
     { title: 'Angular Meetup', start: 0, goal: 3},
-    { title: 'Chess raiting', start: 1700, goal: 2100},
+    { title: 'Chess raiting', start: 1800, goal: 2100},
     { title: 'Gym', start: 0, goal: 100},
     { title: 'Visit NL museum', start: 0, goal: 10},
   ];
@@ -28,7 +28,7 @@ function App() {
     'Get weight' : 65,
     'Conference talk' : 0,
     'Angular Meetup' : 0,
-    'Chess raiting' : 1700,
+    'Chess raiting' : 1850,
     'Gym' : 5,
     'Visit NL museum': 1
   }
