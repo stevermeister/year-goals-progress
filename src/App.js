@@ -29,7 +29,7 @@ function App() {
     'Conference talk' : 0,
     'Angular Meetup' : 0,
     'Chess raiting' : 1700,
-    'Gym' : 3,
+    'Gym' : 5,
     'Visit NL museum': 1
   }
 
@@ -41,6 +41,8 @@ function App() {
   - book - Беседы с сократом - 9.01
   - film - Interviewing vampire - 8.01
   - museum - van Gogh (Klimt) - 8.01
+  - gym 4
+  - gym 5 - 13.01
 
   */
   
