@@ -16,6 +16,7 @@ function App() {
     { title: 'Chess raiting', start: 1800, goal: 2100},
     { title: 'Gym', start: 0, goal: 100},
     { title: 'Visit NL museum', start: 0, goal: 10},
+    { title: 'Restaurant', start: 0, goal: 12},
   ];
 
   const statusNumber = {
@@ -30,7 +31,8 @@ function App() {
     'Angular Meetup' : 0,
     'Chess raiting' : 1850,
     'Gym' : 5,
-    'Visit NL museum': 1
+    'Visit NL museum': 2,
+    'Restaurant': 1
   }
 
   /* LOG:
@@ -43,6 +45,8 @@ function App() {
   - museum - van Gogh (Klimt) - 8.01
   - gym 4
   - gym 5 - 13.01
+  - museum - 14.01
+  - Restaurant - 14.01
 
   */
   
