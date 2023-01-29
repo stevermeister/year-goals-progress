@@ -30,7 +30,7 @@ function App() {
     'Conference talk' : 0,
     'Angular Meetup' : 0,
     'Chess raiting' : 1850,
-    'Gym' : 8,
+    'Gym' : 9,
     'Visit NL museum': 2,
     'Restaurant': 1
   }
@@ -50,6 +50,7 @@ function App() {
   - gym 6 - 21.01
   - gym 7 - 22.01
   - gym 8 - 24.01
+  - gym 9 - 29.01
 
   */
   
