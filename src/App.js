@@ -63,22 +63,13 @@ function App() {
         <h1>Goals progress</h1>
 
         <ul>
-          <li>Year: <ProgressBar start={0} total={365} number={dayOfYear()}/></li>
           {goals.map((goal, index) => (
-            <li>{goal.title}: <ProgressBar start={goal.start} total={goal.goal} number={statusNumber[goal.title]}/></li>
+            <li>{goal.title}: <ProgressBar start={goal.start} goal={goal.goal} number={statusNumber[goal.title]}/></li>
           ))}
         </ul>
 
       </div>
     )
-}
-
-function dayOfYear() {
-  const today = new Date();
-  const startOfYear = new Date(today.getFullYear(), 0, 1);
-  const dayOfYear = Math.floor((today - startOfYear) / (1000 * 60 * 60 * 24));
-
-  return dayOfYear;
 }
 
 export default App;
