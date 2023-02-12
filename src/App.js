@@ -6,6 +6,7 @@ function App() {
   const goals = [
     { title: 'Visit a new country', start: 0, goal: 2},
     { title: 'Visit a new city', start: 0, goal: 20},
+    { title: 'Visit a new place', start: 0, goal: 20},
     { title: 'Swim in the sea', start: 0, goal: 2},
     { title: 'Read book', start: 0, goal: 25},
     { title: 'Listen audiobook', start: 0, goal: 10},
@@ -21,7 +22,8 @@ function App() {
 
   const statusNumber = {
     'Visit a new country' : 0,
-    'Visit a new city' : 1,
+    'Visit a new city' : 2,
+    'Visit a new place': 1,
     'Swim in the sea' : 0,
     'Read book' : 1,
     'Listen audiobook' : 0,
@@ -30,7 +32,7 @@ function App() {
     'Conference talk' : 0,
     'Angular Meetup' : 0,
     'Chess raiting' : 1850,
-    'Gym' : 12,
+    'Gym' : 14,
     'Visit NL museum': 2,
     'Restaurant': 1
   }
@@ -54,6 +56,10 @@ function App() {
   - gym 10 - 30.01
   - gym 11 - 1.02
   - gym 12 - 5.02
+  - gym 13 - 9.02
+  - gym 14 - 11.02
+  - new city - 2 - Huisen - 12.02
+  - new place - 1 - Fletcher Hotel region at  Huisen - 12.02
 
   */
   
