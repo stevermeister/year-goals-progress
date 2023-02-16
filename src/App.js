@@ -32,7 +32,7 @@ function App() {
     'Conference talk' : 0,
     'Angular Meetup' : 0,
     'Chess raiting' : 1850,
-    'Gym' : 15,
+    'Gym' : 16,
     'Visit NL museum': 2,
     'Restaurant': 2
   }
@@ -62,6 +62,8 @@ function App() {
   - new place - 1 - Fletcher Hotel region at  Huisen - 12.02
   - gym 15 - 14.02
   - Restaurant - Gary Loen - 2 - 10.02
+  - gym 16 - 16.02
+
 
   */
   
