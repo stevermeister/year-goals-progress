@@ -27,7 +27,7 @@ function App() {
     'Swim in the sea' : 0,
     'Read book' : 1,
     'Listen audiobook' : 0,
-    'Watch film' : 1,
+    'Watch film' : 2,
     'Get weight' : 65,
     'Conference talk' : 0,
     'Angular Meetup' : 0,
@@ -65,7 +65,7 @@ function App() {
   - gym 16 - 16.02
   - Restaurant - Bono - .02
   - Restaurant - Kusadasi - 4.03
-
+  - Watch film - Glass onion - 2 - 10.03
 
 
   */
