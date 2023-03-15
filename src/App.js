@@ -31,7 +31,7 @@ function App() {
     'Get weight' : 65,
     'Conference talk' : 0,
     'Angular Meetup' : 0,
-    'Chess raiting' : 1850,
+    'Chess raiting' : 1900,
     'Gym' : 17,
     'Visit NL museum': 2,
     'Restaurant': 4
@@ -67,6 +67,7 @@ function App() {
   - Restaurant - Kusadasi - 4.03
   - Watch film - Glass onion - 2 - 10.03
   - gym 17 - 13.03
+  - chess up 1900 - 15.03
 
 
   */
