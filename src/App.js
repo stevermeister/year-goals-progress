@@ -6,7 +6,6 @@ function App() {
   const goals = [
     { title: 'Visit a new country', start: 0, goal: 2},
     { title: 'Visit a new city', start: 0, goal: 20},
-    { title: 'Visit a new place', start: 0, goal: 20},
     { title: 'Swim in the sea', start: 0, goal: 2},
     { title: 'Read book', start: 0, goal: 25},
     { title: 'Listen audiobook', start: 0, goal: 10},
@@ -23,9 +22,8 @@ function App() {
   const statusNumber = {
     'Visit a new country' : 0,
     'Visit a new city' : 2,
-    'Visit a new place': 1,
     'Swim in the sea' : 0,
-    'Read book' : 1,
+    'Read book' : 2,
     'Listen audiobook' : 0,
     'Watch film' : 2,
     'Get weight' : 65,
@@ -33,7 +31,7 @@ function App() {
     'Angular Meetup' : 0,
     'Chess raiting' : 1900,
     'Gym' : 17,
-    'Visit NL museum': 2,
+    'Visit NL museum': 3,
     'Restaurant': 4
   }
 
@@ -68,7 +66,8 @@ function App() {
   - Watch film - Glass onion - 2 - 10.03
   - gym 17 - 13.03
   - chess up 1900 - 15.03
-
+  - Visit NL museum - Royal Palace Amsterdam - 18.03
+  - book - The Strange Journey of Mr Daldry, Marc Levy - 7.04
 
   */
   
