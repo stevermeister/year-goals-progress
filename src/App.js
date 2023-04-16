@@ -21,7 +21,7 @@ function App() {
 
   const statusNumber = {
     'Visit a new country' : 0,
-    'Visit a new city' : 2,
+    'Visit a new city' : 5,
     'Swim in the sea' : 0,
     'Read book' : 2,
     'Listen audiobook' : 0,
@@ -68,7 +68,7 @@ function App() {
   - chess up 1900 - 15.03
   - Visit NL museum - Royal Palace Amsterdam - 18.03
   - book - The Strange Journey of Mr Daldry, Marc Levy - 7.04
-
+  - city - Enkhuizen, Urk, Harderwijk
   */
   
 
