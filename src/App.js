@@ -30,7 +30,7 @@ function App() {
     'Conference talk' : 0,
     'Angular Meetup' : 0,
     'Chess raiting' : 1900,
-    'Gym' : 17,
+    'Gym' : 18,
     'Visit NL museum': 3,
     'Restaurant': 4
   }
@@ -69,6 +69,7 @@ function App() {
   - Visit NL museum - Royal Palace Amsterdam - 18.03
   - book - The Strange Journey of Mr Daldry, Marc Levy - 7.04
   - city - Enkhuizen, Urk, Harderwijk
+  - gym 18 - 8.05
   */
   
 
