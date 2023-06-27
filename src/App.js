@@ -29,8 +29,8 @@ function App() {
     'Get weight' : 65,
     'Conference talk' : 0,
     'Angular Meetup' : 0,
-    'Chess raiting' : 1900,
-    'Gym' : 18,
+    'Chess raiting' : 1950,
+    'Gym' : 20,
     'Visit NL museum': 3,
     'Restaurant': 4
   }
@@ -70,6 +70,8 @@ function App() {
   - book - The Strange Journey of Mr Daldry, Marc Levy - 7.04
   - city - Enkhuizen, Urk, Harderwijk
   - gym 18 - 8.05
+  - gym 19 - 24.06
+  - gym 20 - 26.06
   */
   
 
