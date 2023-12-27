@@ -5,10 +5,8 @@ function App() {
 
   const goals = [
     { title: 'Visit a new country', start: 0, goal: 2},
-    { title: 'Visit a new city', start: 0, goal: 20},
     { title: 'Swim in the sea', start: 0, goal: 2},
     { title: 'Read book', start: 0, goal: 25},
-    { title: 'Listen audiobook', start: 0, goal: 10},
     { title: 'Watch film', start: 0, goal: 20},
     { title: 'Get weight', start: 65, goal: 75},
     { title: 'Conference talk', start: 0, goal: 4},
@@ -20,17 +18,15 @@ function App() {
   ];
 
   const statusNumber = {
-    'Visit a new country' : 0,
-    'Visit a new city' : 5,
-    'Swim in the sea' : 0,
-    'Read book' : 2,
-    'Listen audiobook' : 0,
+    'Visit a new country' : 2,
+    'Swim in the sea' : 1,
+    'Read book' : 4,
     'Watch film' : 2,
     'Get weight' : 65,
-    'Conference talk' : 0,
+    'Conference talk' : 1,
     'Angular Meetup' : 0,
-    'Chess raiting' : 1950,
-    'Gym' : 20,
+    'Chess raiting' : 2030,
+    'Gym' : 57,
     'Visit NL museum': 3,
     'Restaurant': 4
   }
@@ -72,6 +68,47 @@ function App() {
   - gym 18 - 8.05
   - gym 19 - 24.06
   - gym 20 - 26.06
+  - gym 21 - 27.06
+  - gym 22 - 29.06
+  - gym 23 - 30.06
+  - gym 24 - 4.07
+  - gym 25 - 6.07
+  - gym 26 - 11.07
+  - gym 27 - 15.07
+  - gym 28 - 16.07
+  - gym 29 - 17.07
+  - gym 30 - 20.07
+  - gym 31 - 1.08
+  - gym 32 - 3.08
+  - gym 33 - 8.08
+  - gym 34 - 10.08
+  - gym 35 - 17.08
+  - gym 36 - 28.08
+  - gym 37 - 29.08
+  - gym 38 - 23.09
+  - gym 39 - 30.09
+  - gym 40 - 3.10
+  - gym 41 - 10.10
+  - gym 42 - 12.10
+  - gym 43 - 15.10
+  - gym 44 - 17.10
+  - gym 45 - 23.10
+  - gym 46 - 24.10
+  - gym 47 - 26.10
+  - gym 48 - 29.10
+  - gym 49 - 31.10
+  - gym 50 - 1.11
+  - gym 51 - 7.11
+  - gym 52 - 15.11
+  - gym 53 - 16.11
+  - gym 54 - 29.11
+  - gym 55 - 4.12
+  - gym 56 - 5.12
+  - gym 57 - 27.12
+  - book - Выбор
+  - book - Когда Ницше плакал
+  - book - Все мы творения на день
+  - book - бхагавад гита
   */
   
 
