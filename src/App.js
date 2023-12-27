@@ -20,7 +20,7 @@ function App() {
   const statusNumber = {
     'Visit a new country' : 2,
     'Swim in the sea' : 1,
-    'Read book' : 4,
+    'Read book' : 6,
     'Watch film' : 2,
     'Get weight' : 65,
     'Conference talk' : 1,
