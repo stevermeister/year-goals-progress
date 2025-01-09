@@ -1,23 +1,24 @@
-function dayOfYear() {
-  const today = new Date();
-  const startOfYear = new Date(today.getFullYear(), 0, 1);
-  const dayOfYear = Math.floor((today - startOfYear) / (1000 * 60 * 60 * 24));
-  return dayOfYear;
-}
+import { memo } from 'react';
+import PropTypes from 'prop-types';
+import { useYearProgress } from './hooks/useYearProgress';
 
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
+function calculateProgress(current, start, goal) {
+  if (goal === start) return 0;
+  const progress = Math.floor((current - start) / (goal - start) * 100);
+  return Math.min(Math.max(progress, 0), 100); // Clamp between 0 and 100
+}
+
 function ProgressBar({ start, current, goal }) {
-  const yearProgress = dayOfYear() / 365;
-  const currentMonth = new Date().getMonth();
+  const { yearProgress, currentMonth } = useYearProgress();
+  const progress = calculateProgress(current, start, goal);
   
   return (
-    <div 
-      className="progressbar-container"
-    >
+    <div className="progressbar-container">
       <div 
         className="progressbar-complete" 
-        style={{ width: `${Math.floor((current-start)/(goal-start)*100)}%` }}
+        style={{ width: `${progress}%` }}
       >
         <div className="progressbar-liquid"></div>
       </div>
@@ -28,7 +29,7 @@ function ProgressBar({ start, current, goal }) {
       <span className="progress">
         {current}/{goal}
         <span style={{ opacity: 0.7, fontSize: '0.9em' }}>
-          ({Math.floor((current-start)/(goal-start)*100)}%)
+          ({progress}%)
         </span>
       </span>
       {months.map((month, index) => (
@@ -48,4 +49,11 @@ function ProgressBar({ start, current, goal }) {
   );
 }
 
-export default ProgressBar
+ProgressBar.propTypes = {
+  start: PropTypes.number.isRequired,
+  current: PropTypes.number.isRequired,
+  goal: PropTypes.number.isRequired
+};
+
+// Memoize the component to prevent unnecessary re-renders
+export default memo(ProgressBar);
