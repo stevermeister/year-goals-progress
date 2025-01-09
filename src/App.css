@@ -1,68 +1,101 @@
 @import url("https://fonts.googleapis.com/css?family=Roboto&display=swap");
+
 body {
   background-color: #2b2b2b;
   color: #fff;
   font-family: "Roboto", sans-serif;
+  margin: 0;
+  padding: 40px;
 }
 
-.container {
-  max-width: 500px;
-  margin: 50px auto;
+.App {
+  max-width: 800px;
+  margin: 0 auto;
 }
-.container h1 {
+
+.App h1 {
   text-align: center;
+  margin-bottom: 40px;
+  font-size: 2.5em;
 }
-.container .progressbar-container {
+
+.goals-container {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.goal-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.goal-item h3 {
+  margin: 0;
+  font-size: 1.2em;
+  font-weight: normal;
+}
+
+.progressbar-container {
   position: relative;
   width: 100%;
-  height: 50px;
-  border: 1px solid #fff;
-  border-radius: 10px;
+  height: 40px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
+
 .progressbar-complete {
   position: absolute;
   left: 0;
-  top: 0px;
+  top: 0;
   height: 100%;
   background-color: #5225bd;
-  border-radius: 10px;
-  z-index: 2;
+  transition: width 0.3s ease;
+  border-radius: 20px;
 }
+
 .progressbar-liquid {
   z-index: 1;
-  width: 70px;
-  height: 70px;
+  width: 50px;
+  height: 50px;
   position: absolute;
   right: -5px;
-  top: -10px;
-  background-color: #5225bd;
+  top: -5px;
+  background-color: #6b44d8;
   border-radius: 40%;
+  animation: rotate 3s linear infinite;
 }
-
-
 
 .progressbar-complete-year {
   position: absolute;
   left: 0;
-  top: 0px;
+  top: 0;
   height: 100%;
-  border-right: 1px solid rgb(255, 0, 0);
-  z-index: 2;
+  border-right: 2px solid rgba(255, 0, 0, 0.7);
+  z-index: 3;
+  pointer-events: none;
 }
-.progressbar-liquid-year {
-  z-index: 1;
-  width: 70px;
-  height: 70px;
-  position: absolute;
-  right: -5px;
-  top: -10px;
-}
-
 
 .progress {
+  position: relative;
   z-index: 2;
+  color: #fff;
+  font-size: 1.1em;
+  font-weight: normal;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
