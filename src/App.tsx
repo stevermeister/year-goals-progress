@@ -1,18 +1,18 @@
 import { useMemo } from 'react';
 import ProgressBar from './ProgressBar';
 import { goals, statusNumber } from './data/goals';
+import { Goal } from './types/goals';
 import './App.css';
 
-function App() {  
+function getProgress(goal: Goal): number {
+  const current = statusNumber[goal.title];
+  return (current - goal.start) / (goal.goal - goal.start);
+}
+
+function App(): JSX.Element {
   // Sort goals by completion percentage
   const sortedGoals = useMemo(() => {
-    return [...goals].sort((a, b) => {
-      const getProgress = (goal) => {
-        const current = statusNumber[goal.title];
-        return (current - goal.start) / (goal.goal - goal.start);
-      };
-      return getProgress(b) - getProgress(a);
-    });
+    return [...goals].sort((a, b) => getProgress(b) - getProgress(a));
   }, []);
 
   return (

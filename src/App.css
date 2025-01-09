@@ -71,39 +71,6 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Quarter markers */
-.progressbar-container::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: repeating-linear-gradient(
-    90deg,
-    transparent,
-    transparent calc(25% - 1px),
-    rgba(255, 255, 255, 0.1) 25%,
-    transparent calc(25% + 1px)
-  );
-  pointer-events: none;
-  z-index: 1;
-}
-
-/* Year progress line */
-.year-progress-line {
-  position: absolute;
-  top: 0;
-  height: 100%;
-  width: 3px;
-  background: rgba(255, 40, 40, 0.7);
-  box-shadow: 
-    0 0 10px rgba(255, 40, 40, 0.3),
-    0 0 20px rgba(255, 40, 40, 0.2);
-  z-index: 3;
-  pointer-events: none;
-}
-
 .progressbar-complete {
   position: absolute;
   left: 0;
@@ -127,6 +94,20 @@ body {
   border-radius: 40%;
   animation: rotate 3s linear infinite;
   filter: blur(1px);
+}
+
+/* Year progress line */
+.year-progress-line {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 3px;
+  background: rgba(255, 40, 40, 0.7);
+  box-shadow: 
+    0 0 10px rgba(255, 40, 40, 0.3),
+    0 0 20px rgba(255, 40, 40, 0.2);
+  z-index: 3;
+  pointer-events: none;
 }
 
 .progress {

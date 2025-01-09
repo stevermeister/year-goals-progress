@@ -1,4 +1,6 @@
-export const goals = [
+import { Goal, GoalStatus } from '../types/goals';
+
+export const goals: Goal[] = [
   { title: 'Visit a new country', start: 0, goal: 2},
   { title: 'Swim in the sea', start: 0, goal: 2},
   { title: 'Read book', start: 0, goal: 25},
@@ -12,7 +14,7 @@ export const goals = [
   { title: 'Restaurant', start: 0, goal: 12},
 ];
 
-export const statusNumber = {
+export const statusNumber: GoalStatus = {
   'Visit a new country' : 2,
   'Swim in the sea' : 1,
   'Read book' : 6,

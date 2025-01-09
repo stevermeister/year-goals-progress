@@ -1,17 +1,20 @@
 import { memo } from 'react';
-import PropTypes from 'prop-types';
 import { useYearProgress } from './hooks/useYearProgress';
 
-const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+interface ProgressBarProps {
+  start: number;
+  current: number;
+  goal: number;
+}
 
-function calculateProgress(current, start, goal) {
+function calculateProgress(current: number, start: number, goal: number): number {
   if (goal === start) return 0;
   const progress = Math.floor((current - start) / (goal - start) * 100);
   return Math.min(Math.max(progress, 0), 100); // Clamp between 0 and 100
 }
 
-function ProgressBar({ start, current, goal }) {
-  const { yearProgress, currentMonth } = useYearProgress();
+function ProgressBar({ start, current, goal }: ProgressBarProps): JSX.Element {
+  const { yearProgress } = useYearProgress();
   const progress = calculateProgress(current, start, goal);
   
   return (
@@ -32,28 +35,8 @@ function ProgressBar({ start, current, goal }) {
           ({progress}%)
         </span>
       </span>
-      {months.map((month, index) => (
-        <div
-          key={month}
-          className="month-marker"
-          style={{
-            left: `${(index + 0.5) * (100/12)}%`,
-            opacity: index === currentMonth ? 1 : 0.5,
-            fontWeight: index === currentMonth ? 500 : 'normal'
-          }}
-        >
-          {month}
-        </div>
-      ))}
     </div>
   );
 }
 
-ProgressBar.propTypes = {
-  start: PropTypes.number.isRequired,
-  current: PropTypes.number.isRequired,
-  goal: PropTypes.number.isRequired
-};
-
-// Memoize the component to prevent unnecessary re-renders
 export default memo(ProgressBar);
