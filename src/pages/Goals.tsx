@@ -1,12 +1,15 @@
 import { useMemo } from 'react';
-import { useGoals } from '../hooks/useGoals';
 import { useAuth } from '../hooks/useAuth';
+import { useGoals } from '../hooks/useGoals';
+import { Goal } from '../types/goals';
 import ProgressBar from '../ProgressBar';
 import { UserMenu } from '../components/UserMenu';
-import { Goal } from '../types/goals';
+import { Navigation } from '../components/Navigation';
 
-function getProgress(goal: Goal, current: number): number {
-  return (current - goal.start) / (goal.goal - goal.start);
+export function getProgress(goal: Goal, current: number): number {
+  const range = goal.goal - goal.start;
+  const progress = current - goal.start;
+  return (progress / range) * 100;
 }
 
 export function Goals() {
@@ -25,7 +28,7 @@ export function Goals() {
     return (
       <div className="App">
         <UserMenu user={user!} />
-        <h1>Year Goals Progress</h1>
+        <Navigation />
         <div className="loading">Loading goals...</div>
       </div>
     );
@@ -35,8 +38,8 @@ export function Goals() {
     return (
       <div className="App">
         <UserMenu user={user!} />
-        <h1>Year Goals Progress</h1>
-        <div className="error">{goalsError}</div>
+        <Navigation />
+        <div className="error">Error loading goals: {goalsError.message}</div>
       </div>
     );
   }
@@ -44,26 +47,21 @@ export function Goals() {
   return (
     <div className="App">
       <UserMenu user={user!} />
-      <h1>Year Goals Progress</h1>
-      <div className="goals-container">
-        {sortedGoals.map((goal) => {
-          const current = status[goal.title];
-          if (current === undefined) {
-            console.warn(`No status found for goal: ${goal.title}`);
-            return null;
-          }
-
-          return (
+      <Navigation />
+      <div className="page-content">
+        <h1>Year Goals Progress</h1>
+        <div className="goals-container">
+          {sortedGoals.map((goal) => (
             <div key={goal.title} className="goal-item">
               <h3>{goal.title}</h3>
               <ProgressBar 
                 start={goal.start}
-                current={current}
+                current={status[goal.title] ?? goal.start}
                 goal={goal.goal}
               />
             </div>
-          );
-        })}
+          ))}
+        </div>
       </div>
     </div>
   );
