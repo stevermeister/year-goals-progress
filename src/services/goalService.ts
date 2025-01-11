@@ -1,4 +1,4 @@
-import { collection, doc, getDoc, setDoc, deleteDoc, onSnapshot } from 'firebase/firestore';
+import { collection, doc, getDoc, setDoc, deleteDoc, onSnapshot, addDoc, serverTimestamp, query, where, orderBy, getDocs } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { Goal, GoalStatus } from '../types/goals';
 
@@ -87,12 +87,8 @@ export function subscribeToStatus(userId: string, callback: (status: GoalStatus)
 
 export async function updateGoals(userId: string, goals: Goal[]): Promise<void> {
   try {
-    const goalsObject = goals.reduce((acc, goal) => ({
-      ...acc,
-      [goal.id]: goal
-    }), {});
-
-    await setDoc(doc(db, USERS_COLLECTION, userId, 'data', 'goals'), goalsObject);
+    const goalsRef = doc(db, USERS_COLLECTION, userId, 'data', 'goals');
+    await setDoc(goalsRef, { goals });
   } catch (error) {
     console.error('Error updating goals:', error);
     throw error;
@@ -110,15 +106,80 @@ export async function updateStatus(userId: string, status: GoalStatus): Promise<
 
 export async function removeUserData(userId: string): Promise<void> {
   try {
-    const userDataRef = doc(db, USERS_COLLECTION, userId, 'data', 'goals');
-    const userStatusRef = doc(db, USERS_COLLECTION, userId, 'data', 'status');
+    // Delete goals document
+    const goalsRef = doc(db, USERS_COLLECTION, userId, 'data', 'goals');
     
+    // Delete progress logs collection
+    const logsRef = collection(db, USERS_COLLECTION, userId, 'progressLogs');
+    const logsSnapshot = await getDocs(logsRef);
+    const logDeletions = logsSnapshot.docs.map(doc => 
+      deleteDoc(doc.ref)
+    );
+    
+    // Delete status document
+    const statusRef = doc(db, USERS_COLLECTION, userId, 'data', 'status');
+    
+    // Wait for all deletions to complete
     await Promise.all([
-      deleteDoc(userDataRef),
-      deleteDoc(userStatusRef)
+      deleteDoc(goalsRef),
+      ...logDeletions,
+      deleteDoc(statusRef)
     ]);
+
+    console.log('Successfully removed all user data');
   } catch (error) {
     console.error('Error removing user data:', error);
     throw error;
   }
+}
+
+export interface ProgressLog {
+  goalId: string;
+  goalTitle: string;
+  value: number;
+  date: string;
+  notes: string;
+  type: 'increment' | 'decrement';
+}
+
+export async function addProgressLog(userId: string, log: ProgressLog): Promise<void> {
+  try {
+    const progressLogRef = collection(db, 'users', userId, 'progressLogs');
+    await addDoc(progressLogRef, {
+      ...log,
+      timestamp: serverTimestamp()
+    });
+  } catch (error) {
+    console.error('Error adding progress log:', error);
+    throw error;
+  }
+}
+
+export async function getProgressLogs(userId: string, goalId: string): Promise<ProgressLog[]> {
+  const progressLogRef = collection(db, 'users', userId, 'progressLogs');
+  const q = query(
+    progressLogRef, 
+    where('goalId', '==', goalId),
+    orderBy('timestamp', 'asc')
+  );
+  
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map(doc => doc.data() as ProgressLog);
+}
+
+export async function getAllProgressLogs(userId: string): Promise<ProgressLog[]> {
+  const progressLogRef = collection(db, 'users', userId, 'progressLogs');
+  const q = query(progressLogRef, orderBy('timestamp', 'desc'));
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data()
+  } as ProgressLog));
+}
+
+export async function calculateCurrentProgress(userId: string, goalId: string, startValue: number): Promise<number> {
+  const logs = await getProgressLogs(userId, goalId);
+  return logs.reduce((total, log) => {
+    return log.type === 'increment' ? total + log.value : total - log.value;
+  }, startValue);
 }

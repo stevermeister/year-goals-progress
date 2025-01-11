@@ -6,6 +6,7 @@ import { Goal } from './types/goals';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Goals } from './pages/Goals';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { History } from './pages/History';
 import './App.css';
 
 function AppRoutes(): JSX.Element {
@@ -33,16 +34,11 @@ function AppRoutes(): JSX.Element {
 
   return (
     <Routes>
+      <Route path="/" element={<Navigate to="/goals" />} />
+      <Route path="/goals" element={<ProtectedRoute><Goals /></ProtectedRoute>} />
+      <Route path="/history" element={<ProtectedRoute><History /></ProtectedRoute>} />
       <Route path="/login" element={<Login />} />
-      <Route
-        path="/"
-        element={
-          <ProtectedRoute>
-            <Goals />
-          </ProtectedRoute>
-        }
-      />
-      <Route path="*" element={<Navigate to="/" replace />} />
+      <Route path="*" element={<Navigate to="/goals" replace />} />
     </Routes>
   );
 }

@@ -4,6 +4,7 @@ import { useGoals } from '../hooks/useGoals';
 import { Goal } from '../types/goals';
 import ProgressBar from '../ProgressBar';
 import { UserMenu } from '../components/UserMenu';
+import { addProgressLog } from '../services/goalService';
 import './Goals.css';
 
 export function getProgress(goal: Goal, current: number): number {
@@ -26,7 +27,29 @@ export function Goals() {
 
     const currentValue = status[goalId] ?? goal.start;
     if (currentValue < goal.goal) {
-      await updateGoalProgress(goalId, currentValue + 1);
+      try {
+        // First log the progress
+        if (user?.uid) {
+          try {
+            await addProgressLog(user.uid, {
+              goalId,
+              goalTitle: goal.title,
+              value: 1, // Each log represents a +1 increment
+              date: new Date().toISOString().split('T')[0],
+              notes: '',
+              type: 'increment'
+            });
+          } catch (error) {
+            console.error('Failed to log progress:', error);
+          }
+        }
+        
+        // Then update the UI
+        await updateGoalProgress(goalId, currentValue + 1);
+      } catch (error) {
+        console.error('Failed to update progress:', error);
+        alert('Failed to update progress. Please try again.');
+      }
     }
   };
 

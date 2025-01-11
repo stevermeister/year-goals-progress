@@ -1,4 +1,7 @@
 import { useState } from 'react';
+import { useAuth } from '../hooks/useAuth';
+import { addGoal } from '../services/goalService';
+import { useNavigate } from 'react-router-dom';
 import { useGoals } from '../hooks/useGoals';
 import { Goal } from '../types/goals';
 import './AddGoalForm.css';
@@ -8,7 +11,9 @@ interface AddGoalFormProps {
 }
 
 export function AddGoalForm({ onClose }: AddGoalFormProps) {
-  const { addGoal } = useGoals();
+  const { user } = useAuth();
+  const { addGoal: addGoalHook } = useGoals();
+  const navigate = useNavigate();
   const [title, setTitle] = useState('');
   const [start, setStart] = useState('0');
   const [goal, setGoal] = useState('100');
@@ -22,6 +27,11 @@ export function AddGoalForm({ onClose }: AddGoalFormProps) {
     e.preventDefault();
     if (isSubmitting) return;
 
+    if (!user) {
+      console.error('You must be logged in to add a goal');
+      return;
+    }
+
     try {
       setIsSubmitting(true);
       const newGoal: Goal = {
@@ -31,8 +41,9 @@ export function AddGoalForm({ onClose }: AddGoalFormProps) {
         goal: Number(goal)
       };
 
-      await addGoal(newGoal);
+      await addGoalHook(newGoal);
       onClose();
+      navigate('/goals'); // Navigate to goals page after successful addition
     } catch (error) {
       console.error('Error adding goal:', error);
     } finally {

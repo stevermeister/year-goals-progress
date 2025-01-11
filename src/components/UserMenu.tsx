@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, KeyboardEvent as ReactKeyboardEvent } from 'react';
 import { User, signOut } from 'firebase/auth';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { auth } from '../config/firebase';
 import { removeUserData } from '../services/goalService';
 import { Modal } from '../components/Modal';
@@ -173,11 +173,13 @@ export function UserMenu({ user }: UserMenuProps) {
           role="menu"
           aria-label="User menu"
         >
+          <Link to="/goals" className="menu-item">Goals</Link>
+          <Link to="/history" className="menu-item">History</Link>
           {menuItems.map((item, index) => (
             <button
               key={item.label}
               ref={el => menuItemsRef.current[index] = el}
-              className={item.className}
+              className={`menu-item ${item.className || ''}`}
               onClick={() => {
                 item.action();
                 closeMenu();
