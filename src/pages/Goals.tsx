@@ -45,47 +45,47 @@ export function Goals() {
       <div className="page-content">
         <div className="page-header">
           <h1>Year Goals Progress</h1>
-          <div className="header-buttons">
+          {goals.length > 0 && (
             <button 
-              className="add-goal-button"
-              onClick={() => setIsAddGoalOpen(true)}
+              className="add-progress-button primary-button"
+              onClick={() => setIsAddProgressOpen(true)}
             >
-              Add Goal
+              Add Progress
             </button>
-            {goals.length > 0 && (
-              <button 
-                className="add-progress-button"
-                onClick={() => setIsAddProgressOpen(true)}
-              >
-                Add Progress
-              </button>
-            )}
-          </div>
+          )}
         </div>
         <div className="goals-container">
           {goals.length === 0 ? (
             <div className="no-goals-message">
               <p>You haven't set any goals yet.</p>
               <button 
-                className="create-goals-button"
+                className="create-goals-button primary-button"
                 onClick={() => setIsAddGoalOpen(true)}
               >
                 Create Your First Goal
               </button>
             </div>
           ) : (
-            <ul className="goals-list">
-              {goals.map((goal: Goal) => (
-                <li key={goal.id} className="goal-item">
-                  <h3>{goal.title}</h3>
-                  <ProgressBar 
-                    start={goal.start} 
-                    current={status[goal.id] ?? goal.start}
-                    goal={goal.goal} 
-                  />
-                </li>
-              ))}
-            </ul>
+            <div className="goals-content">
+              <ul className="goals-list">
+                {goals.map((goal: Goal) => (
+                  <li key={goal.id} className="goal-item">
+                    <h3>{goal.title}</h3>
+                    <ProgressBar 
+                      start={goal.start} 
+                      current={status[goal.id] ?? goal.start}
+                      goal={goal.goal} 
+                    />
+                  </li>
+                ))}
+              </ul>
+              <button 
+                className="add-goal-button compact-button"
+                onClick={() => setIsAddGoalOpen(true)}
+              >
+                + Add Goal
+              </button>
+            </div>
           )}
         </div>
       </div>
