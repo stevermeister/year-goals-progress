@@ -1,4 +1,18 @@
-import { collection, doc, getDoc, setDoc, deleteDoc, onSnapshot, addDoc, serverTimestamp, query, where, orderBy, getDocs } from 'firebase/firestore';
+import { 
+  collection, 
+  doc, 
+  getDoc,
+  getDocs,
+  setDoc, 
+  deleteDoc,
+  onSnapshot,
+  Timestamp,
+  addDoc,
+  query,
+  orderBy,
+  where,
+  runTransaction
+} from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { Goal, GoalStatus } from '../types/goals';
 
@@ -118,12 +132,16 @@ export async function removeUserData(userId: string): Promise<void> {
     
     // Delete status document
     const statusRef = doc(db, USERS_COLLECTION, userId, 'data', 'status');
+
+    // Delete preferences document (welcome screen seen status)
+    const prefsRef = doc(db, USERS_COLLECTION, userId, 'preferences', 'app');
     
     // Wait for all deletions to complete
     await Promise.all([
       deleteDoc(goalsRef),
       ...logDeletions,
-      deleteDoc(statusRef)
+      deleteDoc(statusRef),
+      deleteDoc(prefsRef)
     ]);
 
     console.log('Successfully removed all user data');
@@ -147,7 +165,7 @@ export async function addProgressLog(userId: string, log: ProgressLog): Promise<
     const progressLogRef = collection(db, 'users', userId, 'progressLogs');
     await addDoc(progressLogRef, {
       ...log,
-      timestamp: serverTimestamp()
+      timestamp: Timestamp.now()
     });
   } catch (error) {
     console.error('Error adding progress log:', error);
@@ -182,4 +200,46 @@ export async function calculateCurrentProgress(userId: string, goalId: string, s
   return logs.reduce((total, log) => {
     return log.type === 'increment' ? total + log.value : total - log.value;
   }, startValue);
+}
+
+export async function addGoal(userId: string, goal: { title: string; goal: number; start: number }): Promise<void> {
+  try {
+    const goalsRef = doc(db, USERS_COLLECTION, userId, 'data', 'goals');
+    const statusRef = doc(db, USERS_COLLECTION, userId, 'data', 'status');
+    
+    // Get current goals
+    const goalsDoc = await getDoc(goalsRef);
+    const currentGoals = goalsDoc.exists() 
+      ? (Array.isArray(goalsDoc.data()) ? goalsDoc.data() : (goalsDoc.data()?.goals || []))
+      : [];
+
+    // Create new goal
+    const newGoal = {
+      id: crypto.randomUUID(),
+      title: goal.title,
+      goal: goal.goal,
+      start: goal.start,
+      createdAt: new Date().toISOString()
+    };
+
+    // Get current status
+    const statusDoc = await getDoc(statusRef);
+    const currentStatus = statusDoc.exists() ? statusDoc.data() : {};
+
+    // Use transaction to ensure atomic update of both goals and status
+    await runTransaction(db, async (transaction) => {
+      // Update goals
+      transaction.set(goalsRef, { goals: [...currentGoals, newGoal] });
+      
+      // Update status
+      transaction.set(statusRef, {
+        ...currentStatus,
+        [newGoal.id]: newGoal.start
+      });
+    });
+
+  } catch (error) {
+    console.error('Error adding goal:', error);
+    throw error;
+  }
 }
