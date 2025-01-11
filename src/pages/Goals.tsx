@@ -1,10 +1,13 @@
-import { useMemo } from 'react';
+import { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { useGoals } from '../hooks/useGoals';
 import { Goal } from '../types/goals';
 import ProgressBar from '../ProgressBar';
 import { UserMenu } from '../components/UserMenu';
-import { Navigation } from '../components/Navigation';
+import { Modal } from '../components/Modal';
+import { AddProgressForm } from '../components/AddProgressForm';
+import { AddGoalForm } from '../components/AddGoalForm';
+import './Goals.css';
 
 export function getProgress(goal: Goal, current: number): number {
   const range = goal.goal - goal.start;
@@ -15,20 +18,13 @@ export function getProgress(goal: Goal, current: number): number {
 export function Goals() {
   const { user } = useAuth();
   const { goals, status, loading: goalsLoading, error: goalsError } = useGoals();
-
-  const sortedGoals = useMemo(() => {
-    return [...goals].sort((a, b) => {
-      const progressA = getProgress(a, status[a.title] ?? a.start);
-      const progressB = getProgress(b, status[b.title] ?? b.start);
-      return progressB - progressA;
-    });
-  }, [goals, status]);
+  const [isAddProgressOpen, setIsAddProgressOpen] = useState(false);
+  const [isAddGoalOpen, setIsAddGoalOpen] = useState(false);
 
   if (goalsLoading) {
     return (
       <div className="App">
-        <UserMenu user={user!} />
-        <Navigation />
+        <UserMenu user={user} />
         <div className="loading">Loading goals...</div>
       </div>
     );
@@ -37,8 +33,7 @@ export function Goals() {
   if (goalsError) {
     return (
       <div className="App">
-        <UserMenu user={user!} />
-        <Navigation />
+        <UserMenu user={user} />
         <div className="error">Error loading goals: {goalsError.message}</div>
       </div>
     );
@@ -46,23 +41,68 @@ export function Goals() {
 
   return (
     <div className="App">
-      <UserMenu user={user!} />
-      <Navigation />
+      <UserMenu user={user} />
       <div className="page-content">
-        <h1>Year Goals Progress</h1>
+        <div className="page-header">
+          <h1>Year Goals Progress</h1>
+          <div className="header-buttons">
+            <button 
+              className="add-goal-button"
+              onClick={() => setIsAddGoalOpen(true)}
+            >
+              Add Goal
+            </button>
+            {goals.length > 0 && (
+              <button 
+                className="add-progress-button"
+                onClick={() => setIsAddProgressOpen(true)}
+              >
+                Add Progress
+              </button>
+            )}
+          </div>
+        </div>
         <div className="goals-container">
-          {sortedGoals.map((goal) => (
-            <div key={goal.title} className="goal-item">
-              <h3>{goal.title}</h3>
-              <ProgressBar 
-                start={goal.start}
-                current={status[goal.title] ?? goal.start}
-                goal={goal.goal}
-              />
+          {goals.length === 0 ? (
+            <div className="no-goals-message">
+              <p>You haven't set any goals yet.</p>
+              <button 
+                className="create-goals-button"
+                onClick={() => setIsAddGoalOpen(true)}
+              >
+                Create Your First Goal
+              </button>
             </div>
-          ))}
+          ) : (
+            <ul className="goals-list">
+              {goals.map((goal: Goal) => (
+                <li key={goal.id} className="goal-item">
+                  <h3>{goal.title}</h3>
+                  <ProgressBar 
+                    start={goal.start} 
+                    current={status[goal.id] ?? goal.start}
+                    goal={goal.goal} 
+                  />
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </div>
+      <Modal
+        isOpen={isAddProgressOpen}
+        onClose={() => setIsAddProgressOpen(false)}
+        title="Add Progress"
+      >
+        <AddProgressForm onClose={() => setIsAddProgressOpen(false)} />
+      </Modal>
+      <Modal
+        isOpen={isAddGoalOpen}
+        onClose={() => setIsAddGoalOpen(false)}
+        title="Add Goal"
+      >
+        <AddGoalForm onClose={() => setIsAddGoalOpen(false)} />
+      </Modal>
     </div>
   );
 }

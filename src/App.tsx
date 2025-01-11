@@ -6,8 +6,6 @@ import { Goal } from './types/goals';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Goals } from './pages/Goals';
 import { ProtectedRoute } from './components/ProtectedRoute';
-import { EditGoals } from './pages/EditGoals';
-import { AddProgress } from './pages/AddProgress';
 import './App.css';
 
 function AppRoutes(): JSX.Element {
@@ -44,16 +42,6 @@ function AppRoutes(): JSX.Element {
           </ProtectedRoute>
         }
       />
-      <Route path="/edit-goals" element={
-        <ProtectedRoute>
-          <EditGoals />
-        </ProtectedRoute>
-      } />
-      <Route path="/add-progress" element={
-        <ProtectedRoute>
-          <AddProgress />
-        </ProtectedRoute>
-      } />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

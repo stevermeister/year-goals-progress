@@ -21,9 +21,6 @@ export const auth = getAuth(app);
 
 // Ensure we're using local persistence
 setPersistence(auth, browserLocalPersistence)
-  .then(() => {
-    console.log('Firebase Auth persistence set to LOCAL');
-  })
   .catch((error) => {
     console.error("Auth persistence error:", error);
   });

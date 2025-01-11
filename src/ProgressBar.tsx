@@ -1,5 +1,6 @@
 import { memo } from 'react';
 import { useYearProgress } from './hooks/useYearProgress';
+import './styles/ProgressBar.css';
 
 interface ProgressBarProps {
   start: number;
@@ -16,25 +17,26 @@ function calculateProgress(current: number, start: number, goal: number): number
 function ProgressBar({ start, current, goal }: ProgressBarProps): JSX.Element {
   const { yearProgress } = useYearProgress();
   const progress = calculateProgress(current, start, goal);
+  const yearProgressPercentage = yearProgress * 100;
   
   return (
-    <div className="progressbar-container">
-      <div 
-        className="progressbar-complete" 
-        style={{ width: `${progress}%` }}
-      >
-        <div className="progressbar-liquid"></div>
+    <div className="progressbar-wrapper">
+      <div className="progressbar-container">
+        <div 
+          className="progressbar-complete" 
+          style={{ width: `${progress}%` }}
+        >
+          <div className="progressbar-liquid"></div>
+        </div>
+        <div 
+          className="year-progress-line"
+          style={{ left: `${yearProgressPercentage}%` }}
+        />
       </div>
-      <div 
-        className="year-progress-line"
-        style={{ left: `${yearProgress * 100}%` }}
-      />
-      <span className="progress">
-        {current}/{goal}
-        <span style={{ opacity: 0.7, fontSize: '0.9em' }}>
-          ({progress}%)
-        </span>
-      </span>
+      <div className="progress-labels">
+        <span className="progress-value">{current}</span>
+        <span className="progress-target">Target: {goal}</span>
+      </div>
     </div>
   );
 }
