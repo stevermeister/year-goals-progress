@@ -28,14 +28,17 @@ function ProgressBar({ start, current, goal }: ProgressBarProps): JSX.Element {
         >
           <div className="progressbar-liquid"></div>
         </div>
+        <div className="progress-percentage">
+          {progress}%
+        </div>
         <div 
           className="year-progress-line"
           style={{ left: `${yearProgressPercentage}%` }}
         />
-      </div>
-      <div className="progress-labels">
-        <span className="progress-value">{current}</span>
-        <span className="progress-target">Target: {goal}</span>
+        <div className="progress-numbers">
+          <span className="current-value">{current}</span>
+          <span className="target-value">{goal}</span>
+        </div>
       </div>
     </div>
   );

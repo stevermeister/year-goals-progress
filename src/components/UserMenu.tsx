@@ -3,6 +3,8 @@ import { User, signOut } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { auth } from '../config/firebase';
 import { removeUserData } from '../services/goalService';
+import { Modal } from '../components/Modal';
+import { AddGoalForm } from '../components/AddGoalForm';
 import './UserMenu.css';
 
 interface UserMenuProps {
@@ -13,6 +15,7 @@ export function UserMenu({ user }: UserMenuProps) {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [isAddGoalOpen, setIsAddGoalOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const menuItemsRef = useRef<(HTMLButtonElement | null)[]>([]);
@@ -42,6 +45,7 @@ export function UserMenu({ user }: UserMenuProps) {
       document.removeEventListener('mousedown', handleClickOutside);
       document.removeEventListener('keydown', handleEscKey);
     };
+
   }, [isOpen, isConfirmOpen]);
 
   // Reset focus index when menu closes
@@ -112,7 +116,11 @@ export function UserMenu({ user }: UserMenuProps) {
   }
 
   const menuItems = [
-    { label: 'Dashboard', action: () => navigate('/') },
+    { 
+      label: 'Add Goal', 
+      action: () => setIsAddGoalOpen(true),
+      'aria-label': 'Add a new goal'
+    },
     { 
       label: 'Remove All Data', 
       action: () => setIsConfirmOpen(true),
@@ -136,8 +144,8 @@ export function UserMenu({ user }: UserMenuProps) {
         ref={buttonRef}
         className="user-menu-button" 
         onClick={() => setIsOpen(!isOpen)}
-        aria-haspopup="true"
         aria-expanded={isOpen}
+        aria-haspopup="true"
         aria-controls="user-menu-dropdown"
       >
         {user.photoURL ? (
@@ -217,6 +225,14 @@ export function UserMenu({ user }: UserMenuProps) {
           </div>
         </div>
       )}
+
+      <Modal
+        isOpen={isAddGoalOpen}
+        onClose={() => setIsAddGoalOpen(false)}
+        title="Add Goal"
+      >
+        <AddGoalForm onClose={() => setIsAddGoalOpen(false)} />
+      </Modal>
     </div>
   );
 }

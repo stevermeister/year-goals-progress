@@ -4,15 +4,33 @@
   flex-direction: column;
   background: #0f172a;
   color: white;
+  overflow-y: auto;
+  position: relative;
+  margin: 0;
+  padding: 0;
+}
+
+.app-header {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 100;
+  background: #0f172a;
+  padding: 0.75rem 2rem;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .page-content {
   flex: 1;
   padding: 2rem;
+  padding-top: 4.5rem; /* Account for fixed header */
   max-width: 1200px;
   margin: 0 auto;
   width: 100%;
   box-sizing: border-box;
+  position: relative;
 }
 
 .page-header {
@@ -70,6 +88,19 @@
   border-color: rgba(255, 255, 255, 0.2);
 }
 
+.compact-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.compact-button:disabled:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+  transform: none;
+}
+
 .secondary-button {
   background: rgba(255, 255, 255, 0.1);
   color: white;
@@ -108,15 +139,16 @@
 
 .no-goals-message {
   text-align: center;
-  padding: 3rem;
-  background: rgba(255, 255, 255, 0.03);
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.05);
   border-radius: 12px;
+  margin: 2rem 0;
 }
 
 .no-goals-message p {
-  margin: 0 0 1.5rem 0;
-  font-size: 1.125rem;
+  margin: 0 0 1rem;
   color: rgba(255, 255, 255, 0.7);
+  font-size: 1.1rem;
 }
 
 .goals-list {
@@ -134,10 +166,31 @@
   padding: 1.5rem;
 }
 
-.goal-item h3 {
-  margin: 0 0 1rem 0;
+.goal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.goal-header h3 {
+  margin: 0;
   font-size: 1.25rem;
   font-weight: 500;
+}
+
+.goal-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.progress-value {
+  text-align: right;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.5px;
 }
 
 .loading,

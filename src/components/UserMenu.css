@@ -1,13 +1,14 @@
 .user-menu {
   position: relative;
-  z-index: 1000;
+  display: flex;
+  align-items: center;
 }
 
 .user-menu-button {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 4px;
+  padding: 4px 8px;
   border: none;
   background: none;
   color: white;
@@ -91,63 +92,69 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1100;
+  z-index: 1000;
 }
 
 .confirm-modal {
   background: #1e1e1e;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
+  border-radius: 8px;
   padding: 24px;
+  width: 100%;
   max-width: 400px;
-  width: 90%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .confirm-modal h3 {
   margin: 0 0 16px;
+  font-size: 1.25rem;
   color: white;
-  font-size: 20px;
 }
 
 .confirm-modal p {
   margin: 0 0 24px;
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
   line-height: 1.5;
 }
 
 .confirm-actions {
   display: flex;
-  justify-content: flex-end;
   gap: 12px;
+  justify-content: flex-end;
 }
 
 .confirm-actions button {
   padding: 8px 16px;
-  border-radius: 6px;
+  border-radius: 4px;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.15s ease;
-  border: none;
+  transition: background-color 0.2s;
 }
 
 .cancel-button {
-  background: rgba(255, 255, 255, 0.1);
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   color: white;
 }
 
 .cancel-button:hover {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.1);
 }
 
-.confirm-button.danger {
+.confirm-button {
   background: #ff6b6b;
+  border: none;
   color: white;
 }
 
-.confirm-button.danger:hover {
-  background: #ff8787;
+.confirm-button:hover {
+  background: #ff5252;
+}
+
+.user-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: white;
 }
 
 .profile-navigation {
