@@ -10,8 +10,7 @@ interface ProgressBarProps {
 
 function calculateProgress(current: number, start: number, goal: number): number {
   if (goal === start) return 0;
-  const progress = Math.floor((current - start) / (goal - start) * 100);
-  return Math.min(Math.max(progress, 0), 100); // Clamp between 0 and 100
+  return Math.min(100, Math.max(0, ((current - start) / (goal - start)) * 100));
 }
 
 function ProgressBar({ start, current, goal }: ProgressBarProps): JSX.Element {
@@ -29,16 +28,12 @@ function ProgressBar({ start, current, goal }: ProgressBarProps): JSX.Element {
           <div className="progressbar-liquid"></div>
         </div>
         <div className="progress-percentage">
-          {progress}%
+          {current} / {goal}
         </div>
         <div 
           className="year-progress-line"
           style={{ left: `${yearProgressPercentage}%` }}
         />
-        <div className="progress-numbers">
-          <span className="current-value">{current}</span>
-          <span className="target-value">{goal}</span>
-        </div>
       </div>
     </div>
   );
