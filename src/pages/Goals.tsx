@@ -18,8 +18,8 @@ export function getProgress(goal: Goal, current: number): number {
 
 interface AddGoalFormData {
   title: string;
-  goal: number;
   start: number;
+  goal: number;
 }
 
 export function Goals() {
@@ -32,14 +32,15 @@ export function Goals() {
     loading: goalsLoading, 
     error: goalsError, 
     setGoals,
-    clearAllGoals 
+    clearAllGoals,
+    importGoals 
   } = useGoals();
   const [showAddForm, setShowAddForm] = useState(false);
   const titleInputRef = useRef<HTMLInputElement>(null);
   const [formData, setFormData] = useState<AddGoalFormData>({
     title: '',
-    goal: 0,
-    start: 0
+    start: 0,
+    goal: 0
   });
 
   useEffect(() => {
@@ -55,11 +56,11 @@ export function Goals() {
     const goal = goals.find(g => g.id === goalId);
     if (!goal) return;
 
-    const currentValue = status[goalId] ?? goal.start;
+    const currentValue = status[goalId] ?? goal.startValue;
     const newValue = currentValue - 1;
     
     // For decreasing goals, we can only decrease until we reach the target
-    if (newValue >= goal.goal) {
+    if (newValue >= goal.goalValue) {
       try {
         await Promise.all([
           addProgressLog({
@@ -81,12 +82,15 @@ export function Goals() {
 
   const handleAddGoal = async () => {
     try {
-      await addNewGoal(formData);
-      setFormData({ title: '', goal: 0, start: 0 });
+      await addNewGoal({
+        title: formData.title,
+        startValue: formData.start,
+        goalValue: formData.goal
+      });
+      setFormData({ title: '', start: 0, goal: 0 });
       setShowAddForm(false);
-    } catch (error) {
-      console.error('Failed to add goal:', error);
-      alert('Failed to add goal. Please try again.');
+    } catch (err) {
+      console.error('Failed to add goal:', err);
     }
   };
 
@@ -104,16 +108,24 @@ export function Goals() {
         <div className="goals-header">
         </div>
 
-        {goals.length === 0 ? (
+        {!goals.length && (
           <div className="no-goals-message">
-            <p>You haven't set any goals yet.</p>
+            <p>You haven't added any goals yet.</p>
+            <button 
+              className="add-goal-button"
+              onClick={() => setShowAddForm(true)}
+            >
+              Add Your First Goal
+            </button>
           </div>
-        ) : (
+        )}
+        
+        {goals.length > 0 && (
           <div className="goals-content">
             <ul className="goals-list">
               {goals.map((goal: Goal) => {
-                const currentValue = status[goal.id] ?? goal.start;
-                const isMaxed = currentValue >= goal.goal;
+                const currentValue = status[goal.id] ?? goal.startValue;
+                const isMaxed = currentValue >= goal.goalValue;
                 
                 return (
                   <li key={goal.id} className="goal-item">
@@ -121,12 +133,12 @@ export function Goals() {
                       <div className="goal-header">
                         <h3>{goal.title}</h3>
                         <div className="goal-values">
-                          {goal.start !== 0 && (
-                            <span className="start-value">({goal.start})</span>
+                          {goal.startValue !== 0 && (
+                            <span className="start-value">({goal.startValue})</span>
                           )}
                           <span className="current-value">{currentValue}</span>
                           <span className="separator">→</span>
-                          <span className="goal-value">{goal.goal}</span>
+                          <span className="goal-value">{goal.goalValue}</span>
                         </div>
                       </div>
                       <div className="goal-progress">
@@ -144,10 +156,10 @@ export function Goals() {
                             e.stopPropagation();
                             
                             const newValue = currentValue - 1;
-                            const isDecreasingGoal = goal.goal < goal.start;
+                            const isDecreasingGoal = goal.goalValue < goal.startValue;
                             
-                            if ((isDecreasingGoal && newValue >= goal.goal) || 
-                                (!isDecreasingGoal && newValue >= goal.start)) {
+                            if ((isDecreasingGoal && newValue >= goal.goalValue) || 
+                                (!isDecreasingGoal && newValue >= goal.startValue)) {
                               addProgressLog({
                                 goalId: goal.id,
                                 goalTitle: goal.title,
@@ -161,8 +173,8 @@ export function Goals() {
                           }}
                           title="Decrease by 1"
                           disabled={
-                            (goal.goal < goal.start && currentValue <= goal.goal) || 
-                            (goal.goal > goal.start && currentValue <= goal.start)
+                            (goal.goalValue < goal.startValue && currentValue <= goal.goalValue) || 
+                            (goal.goalValue > goal.startValue && currentValue <= goal.startValue)
                           }
                         >
                           -1
@@ -174,10 +186,10 @@ export function Goals() {
                             e.stopPropagation();
                             
                             const newValue = currentValue + 1;
-                            const isDecreasingGoal = goal.goal < goal.start;
+                            const isDecreasingGoal = goal.goalValue < goal.startValue;
                             
-                            if ((isDecreasingGoal && newValue <= goal.start) || 
-                                (!isDecreasingGoal && newValue <= goal.goal)) {
+                            if ((isDecreasingGoal && newValue <= goal.startValue) || 
+                                (!isDecreasingGoal && newValue <= goal.goalValue)) {
                               addProgressLog({
                                 goalId: goal.id,
                                 goalTitle: goal.title,
@@ -191,8 +203,8 @@ export function Goals() {
                           }}
                           title="Increase by 1"
                           disabled={
-                            (goal.goal < goal.start && currentValue >= goal.start) || 
-                            (goal.goal > goal.start && currentValue >= goal.goal)
+                            (goal.goalValue < goal.startValue && currentValue >= goal.startValue) || 
+                            (goal.goalValue > goal.startValue && currentValue >= goal.goalValue)
                           }
                         >
                           +1
@@ -216,6 +228,15 @@ export function Goals() {
                 );
               })}
             </ul>
+
+            {!showAddForm && (
+              <button 
+                className="add-goal-button"
+                onClick={() => setShowAddForm(true)}
+              >
+                Add Goal
+              </button>
+            )}
           </div>
         )}
         
@@ -267,7 +288,7 @@ export function Goals() {
                   className="cancel-button"
                   onClick={() => {
                     setShowAddForm(false);
-                    setFormData({ title: '', goal: 0, start: 0 });
+                    setFormData({ title: '', start: 0, goal: 0 });
                   }}
                 >
                   Cancel
@@ -276,54 +297,8 @@ export function Goals() {
             </form>
           </div>
         )}
+        
         <div className="data-actions">
-          <a 
-            className="data-action-link" 
-            onClick={() => {
-              const fileInput = document.createElement('input');
-              fileInput.type = 'file';
-              fileInput.accept = '.json';
-              fileInput.onchange = async (e) => {
-                const file = (e.target as HTMLInputElement).files?.[0];
-                if (file) {
-                  try {
-                    const text = await file.text();
-                    const importedData = JSON.parse(text);
-                    
-                    // Validate imported data structure
-                    if (!Array.isArray(importedData)) {
-                      throw new Error('Invalid goals format');
-                    }
-                    
-                    // Transform and validate each goal object
-                    const transformedGoals = importedData.map(goal => {
-                      if (!goal.id || !goal.title || (typeof goal.goal !== 'number' && typeof goal.goalValue !== 'number')) {
-                        throw new Error('Invalid goal data structure');
-                      }
-
-                      // Handle both old and new formats
-                      return {
-                        id: goal.id,
-                        title: goal.title,
-                        startValue: goal.startValue ?? goal.start ?? 0,
-                        currentValue: goal.currentValue ?? goal.start ?? 0,
-                        goalValue: goal.goalValue ?? goal.goal
-                      };
-                    });
-                    
-                    localStorage.setItem('goals', JSON.stringify(transformedGoals));
-                    setGoals(transformedGoals);
-                  } catch (err) {
-                    console.error('Import error:', err);
-                    alert('Invalid file format. Please make sure it\'s a valid goals JSON file.');
-                  }
-                }
-              };
-              fileInput.click();
-            }}
-          >
-            Import Goals
-          </a>
           <a 
             className="data-action-link"
             onClick={() => {
@@ -337,7 +312,7 @@ export function Goals() {
                   id: goal.id,
                   title: goal.title,
                   startValue: goal.startValue,
-                  currentValue: goal.currentValue,
+                  currentValue: status[goal.id] ?? goal.startValue,
                   goalValue: goal.goalValue
                 }));
                 
@@ -360,6 +335,55 @@ export function Goals() {
             }}
           >
             Export Goals
+          </a>
+          <a 
+            className="data-action-link" 
+            onClick={() => {
+              const fileInput = document.createElement('input');
+              fileInput.type = 'file';
+              fileInput.accept = '.json';
+              fileInput.onchange = async (e) => {
+                const file = (e.target as HTMLInputElement).files?.[0];
+                if (file) {
+                  try {
+                    const text = await file.text();
+                    const importedData = JSON.parse(text);
+                    
+                    if (!Array.isArray(importedData)) {
+                      throw new Error('Invalid goals format: must be an array');
+                    }
+                    
+                    const transformedGoals = importedData.map(goal => {
+                      if (
+                        !goal.id || 
+                        !goal.title || 
+                        typeof goal.startValue !== 'number' ||
+                        typeof goal.currentValue !== 'number' ||
+                        typeof goal.goalValue !== 'number'
+                      ) {
+                        throw new Error('Invalid goal structure: missing or invalid required fields');
+                      }
+
+                      return {
+                        id: goal.id,
+                        title: goal.title,
+                        startValue: goal.startValue,
+                        currentValue: goal.currentValue,
+                        goalValue: goal.goalValue
+                      };
+                    });
+                    
+                    await importGoals(transformedGoals);
+                  } catch (err) {
+                    console.error('Import error:', err);
+                    alert(err instanceof Error ? err.message : 'Failed to import goals');
+                  }
+                }
+              };
+              fileInput.click();
+            }}
+          >
+            Import Goals
           </a>
           <a 
             className="data-action-link danger"

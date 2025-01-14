@@ -23,6 +23,13 @@ async function initDB() {
   });
 }
 
+export interface Goal {
+  id: string;
+  title: string;
+  startValue: number;
+  goalValue: number;
+}
+
 export async function getGoals(): Promise<Goal[]> {
   const db = await initDB();
   return db.getAll(GOALS_STORE);
@@ -41,15 +48,18 @@ export async function getStatus(): Promise<Record<string, number>> {
   }, {} as Record<string, number>);
 }
 
-export async function addGoal(goalData: Omit<Goal, 'id'>): Promise<Goal> {
+export async function addGoal(goal: Omit<Goal, 'id'>): Promise<Goal> {
   const db = await initDB();
+  const id = Date.now().toString();
   const newGoal: Goal = {
-    ...goalData,
-    id: Date.now().toString(),
+    ...goal,
+    id
   };
   
-  await db.add(GOALS_STORE, newGoal);
-  await db.put(STATUS_STORE, goalData.start, newGoal.id);
+  const tx = db.transaction([GOALS_STORE, STATUS_STORE], 'readwrite');
+  await tx.objectStore(GOALS_STORE).add(newGoal);
+  await tx.objectStore(STATUS_STORE).put(goal.startValue, id);
+  await tx.done;
   
   return newGoal;
 }
@@ -86,6 +96,23 @@ export async function clearAllData(): Promise<void> {
     tx.objectStore(STATUS_STORE).clear(),
     tx.objectStore(PROGRESS_LOGS_STORE).clear(),
   ]);
+  
+  await tx.done;
+}
+
+export async function importGoals(goals: Array<Goal & { currentValue: number }>): Promise<void> {
+  const db = await initDB();
+  const tx = db.transaction([GOALS_STORE, STATUS_STORE], 'readwrite');
+  
+  await Promise.all([
+    tx.objectStore(GOALS_STORE).clear(),
+    tx.objectStore(STATUS_STORE).clear()
+  ]);
+  
+  await Promise.all(goals.map(async ({ id, title, startValue, goalValue, currentValue }) => {
+    await tx.objectStore(GOALS_STORE).add({ id, title, startValue, goalValue });
+    await tx.objectStore(STATUS_STORE).put(currentValue, id);
+  }));
   
   await tx.done;
 }

@@ -6,7 +6,8 @@ import {
   addGoal as addGoalToStorage, 
   updateGoalStatus, 
   removeGoal as removeGoalFromStorage,
-  clearAllData 
+  clearAllData,
+  importGoals as importGoalsToStorage
 } from '../services/storageService';
 
 export function useGoals() {
@@ -84,6 +85,20 @@ export function useGoals() {
     }
   };
 
+  const importGoals = async (goals: Goal[]) => {
+    try {
+      await importGoalsToStorage(goals);
+      setGoals(goals);
+      const newStatus = goals.reduce((acc, goal) => {
+        acc[goal.id] = goal.currentValue;
+        return acc;
+      }, {} as Record<string, number>);
+      setStatus(newStatus);
+    } catch (err) {
+      throw err instanceof Error ? err : new Error('Failed to import goals');
+    }
+  };
+
   return {
     goals,
     status,
@@ -93,6 +108,7 @@ export function useGoals() {
     addNewGoal,
     removeGoal,
     setGoals,
-    clearAllGoals
+    clearAllGoals,
+    importGoals
   };
 }
