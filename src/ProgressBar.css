@@ -79,12 +79,19 @@
   overflow: hidden;
 }
 
+@media (max-width: 600px) {
+  .progress-bar {
+    height: 4px;
+    border-radius: 2px;
+  }
+}
+
 .progressbar-complete {
   position: absolute;
   left: 0;
   top: 0;
   height: 100%;
-  background-color: #4CAF50;
+  background: #5225bd;
   border-radius: 4px;
   transition: width 0.3s ease;
 }
@@ -92,11 +99,10 @@
 .year-progress-marker {
   position: absolute;
   top: 0;
-  width: 2px;
   height: 100%;
-  background-color: #ff6b6b;
-  z-index: 2;
-  box-shadow: 0 0 4px rgba(255, 107, 107, 0.5);
+  width: 2px;
+  background: #ff6b6b;
+  z-index: 1;
 }
 
 .year-progress-marker::after {
@@ -106,17 +112,37 @@
   left: -3px;
   width: 8px;
   height: 16px;
-  background-color: #ff6b6b;
+  background: #ff6b6b;
   border-radius: 4px;
   opacity: 0.5;
+}
+
+@media (max-width: 600px) {
+  .year-progress-marker {
+    width: 1px;
+  }
+  
+  .year-progress-marker::after {
+    top: -2px;
+    left: -2px;
+    width: 5px;
+    height: 8px;
+  }
 }
 
 .progress {
   position: absolute;
   right: 8px;
-  top: 50%;
-  transform: translateY(-50%);
+  top: -20px;
   font-size: 12px;
   color: white;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+@media (max-width: 600px) {
+  .progress {
+    top: -16px;
+    right: 4px;
+    font-size: 10px;
+  }
 }

@@ -243,13 +243,51 @@
 }
 
 .goal-item {
-  position: relative;
   background: rgba(255, 255, 255, 0.05);
-  border-radius: 8px;
+  border-radius: 12px;
   padding: 1.5rem;
-  margin-bottom: 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  overflow: hidden;
+  position: relative;
+  transition: transform 0.2s ease;
+}
+
+@media (max-width: 600px) {
+  .goal-item {
+    padding: 0.75rem;
+  }
+
+  .goal-content {
+    gap: 0.5rem;
+  }
+
+  .goal-header {
+    margin-bottom: 0.5rem;
+  }
+
+  .goal-header h3 {
+    font-size: 1rem;
+    line-height: 1.3;
+  }
+
+  .goal-values {
+    font-size: 0.85rem;
+  }
+
+  .current-value {
+    font-size: 1rem;
+  }
+
+  .progress-buttons-overlay {
+    position: static;
+    transform: none;
+    margin-top: 0.5rem;
+    justify-content: flex-end;
+  }
+
+  .add-progress-button {
+    width: 28px;
+    height: 28px;
+    font-size: 0.9rem;
+  }
 }
 
 .goal-content {
@@ -404,98 +442,140 @@
 }
 
 .inline-add-goal-form {
-  margin-top: 2rem;
-  padding: 1.5rem;
   background: rgba(255, 255, 255, 0.05);
-  border-radius: 8px;
+  border-radius: 12px;
+  padding: 1.5rem;
   border: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: 2rem;
 }
 
-.inline-add-goal-form .form-row {
+.form-row {
   display: flex;
   gap: 1rem;
   margin-bottom: 1rem;
   align-items: center;
 }
 
-.inline-add-goal-form input[type="text"] {
+.form-row input[type="text"] {
   flex: 2;
-  padding: 0.75rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 6px;
-  background: rgba(0, 0, 0, 0.2);
-  color: white;
-  font-size: 0.9rem;
 }
 
-.inline-add-goal-form .range-inputs {
+.range-inputs {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   flex: 1;
 }
 
-.inline-add-goal-form .range-inputs input {
+.range-inputs input[type="number"] {
   width: 80px;
-  padding: 0.75rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 6px;
-  background: rgba(0, 0, 0, 0.2);
-  color: white;
-  font-size: 0.9rem;
   text-align: center;
 }
 
-.inline-add-goal-form .range-label {
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 0.9rem;
-  font-weight: 500;
+input {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  padding: 0.75rem;
+  color: white;
+  font-size: 0.95rem;
 }
 
-.inline-add-goal-form input:focus {
+input:focus {
   outline: none;
   border-color: #5225bd;
 }
 
-.inline-add-goal-form input::placeholder {
+input::placeholder {
   color: rgba(255, 255, 255, 0.5);
 }
 
-.inline-add-goal-form .form-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.75rem;
+.range-label {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+  font-weight: 500;
+  white-space: nowrap;
 }
 
-.inline-add-goal-form .submit-button {
-  background: #5225bd;
-  color: white;
-  border: none;
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+}
+
+.submit-button,
+.cancel-button {
   padding: 0.75rem 1.5rem;
   border-radius: 6px;
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   font-weight: 500;
   transition: all 0.2s;
+  min-width: 120px;
 }
 
-.inline-add-goal-form .submit-button:hover {
+.submit-button {
+  background: #5225bd;
+  color: white;
+  border: none;
+}
+
+.submit-button:hover {
   background: #6b44d8;
   transform: translateY(-1px);
 }
 
-.inline-add-goal-form .cancel-button {
+.cancel-button {
   background: transparent;
   color: white;
   border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 0.75rem 1.5rem;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  font-weight: 500;
-  transition: all 0.2s;
 }
 
-.inline-add-goal-form .cancel-button:hover {
+.cancel-button:hover {
   background: rgba(255, 255, 255, 0.1);
+}
+
+@media (max-width: 600px) {
+  .inline-add-goal-form {
+    padding: 1rem;
+    margin-top: 1rem;
+  }
+
+  .form-row {
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: stretch;
+  }
+
+  .form-row input[type="text"] {
+    flex: 1;
+  }
+
+  .range-inputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    flex: none;
+  }
+
+  .range-inputs input[type="number"] {
+    width: 100%;
+  }
+
+  .form-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .form-actions button {
+    width: 100%;
+    min-width: 0;
+  }
+
+  input {
+    width: 100%;
+    box-sizing: border-box;
+  }
 }

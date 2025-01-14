@@ -9,6 +9,12 @@ body {
   line-height: 1.6;
 }
 
+@media (max-width: 600px) {
+  body {
+    padding: 16px 8px;
+  }
+}
+
 .App {
   min-height: 100vh;
   display: flex;
@@ -26,6 +32,12 @@ h1, h2, h3 {
 .page-content {
   flex: 1;
   padding: 0 1rem;
+}
+
+@media (max-width: 600px) {
+  .page-content {
+    padding: 0;
+  }
 }
 
 .loading {
