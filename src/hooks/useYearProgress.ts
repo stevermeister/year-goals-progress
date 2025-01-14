@@ -1,23 +1,14 @@
 import { useMemo } from 'react';
 
-interface YearProgress {
-  dayOfYear: number;
-  yearProgress: number;
-  currentMonth: number;
-}
-
-export function useYearProgress(): YearProgress {
+export function useYearProgress() {
   return useMemo(() => {
-    const today = new Date('2025-01-10T19:46:25+01:00');
-    const startOfYear = new Date(today.getFullYear(), 0, 1);
-    const endOfYear = new Date(today.getFullYear(), 11, 31);
-    const totalDays = Math.floor((endOfYear.getTime() - startOfYear.getTime()) / (1000 * 60 * 60 * 24)) + 1;
-    const dayOfYear = Math.floor((today.getTime() - startOfYear.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+    const now = new Date();
+    const start = new Date(now.getFullYear(), 0, 1); // January 1st
+    const end = new Date(now.getFullYear() + 1, 0, 1); // January 1st next year
     
-    return {
-      dayOfYear,
-      yearProgress: dayOfYear / totalDays,
-      currentMonth: today.getMonth()
-    };
-  }, []); // Will update when component remounts
+    const total = end.getTime() - start.getTime();
+    const elapsed = now.getTime() - start.getTime();
+    
+    return (elapsed / total) * 100;
+  }, []);
 }

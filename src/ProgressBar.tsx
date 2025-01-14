@@ -1,4 +1,5 @@
 import React from 'react';
+import { useYearProgress } from './hooks/useYearProgress';
 import './ProgressBar.css';
 
 interface ProgressBarProps {
@@ -6,6 +7,7 @@ interface ProgressBarProps {
 }
 
 export default function ProgressBar({ progress }: ProgressBarProps) {
+  const yearProgress = useYearProgress();
   const clampedProgress = Math.min(100, Math.max(0, progress));
   
   return (
@@ -13,6 +15,10 @@ export default function ProgressBar({ progress }: ProgressBarProps) {
       <div
         className="progressbar-complete"
         style={{ width: `${clampedProgress}%` }}
+      />
+      <div 
+        className="year-progress-marker"
+        style={{ left: `${yearProgress}%` }}
       />
       <span className="progress">{Math.round(clampedProgress)}%</span>
     </div>
