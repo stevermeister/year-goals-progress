@@ -1,65 +1,79 @@
-import { useState, useEffect, useCallback } from 'react';
-import { Goal, GoalStatus } from '../types/goals';
-import { updateStatus as updateStatusService, updateGoals as updateGoalsService, subscribeToGoals, subscribeToStatus } from '../services/goalService';
-import { doc, onSnapshot } from 'firebase/firestore';
-import { db } from '../config/firebase';
-import { useAuth } from './useAuth';
+import { useState, useEffect } from 'react';
+import { Goal } from '../types/goals';
+import { getGoals, getStatus, addGoal as addGoalToStorage, updateGoalStatus, removeGoal as removeGoalFromStorage } from '../services/storageService';
 
 export function useGoals() {
-  const { user } = useAuth();
   const [goals, setGoals] = useState<Goal[]>([]);
-  const [status, setStatus] = useState<GoalStatus>({});
+  const [status, setStatus] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    if (!user) return;
+    loadGoals();
+  }, []);
 
-    setLoading(true);
-    setError(null);
-
-    const unsubscribeGoals = onSnapshot(
-      doc(db, 'users', user.uid, 'data', 'goals'),
-      (doc) => {
-        if (doc.exists()) {
-          const data = doc.data();
-          setGoals(data?.goals || []);
-        } else {
-          setGoals([]);
-        }
-        setLoading(false);
-      }
-    );
-
-    const unsubscribeStatus = subscribeToStatus(user.uid, (statusData) => {
-      setStatus(statusData);
-    });
-
-    return () => {
-      unsubscribeGoals();
-      unsubscribeStatus();
-    };
-  }, [user]);
-
-  const updateGoalProgress = useCallback(async (goalId: string, newValue: number) => {
-    if (!user) return;
-
+  async function loadGoals() {
     try {
-      await updateStatusService(user.uid, {
-        ...status,
-        [goalId]: newValue
-      });
-    } catch (error) {
-      console.error('Error updating goal progress:', error);
-      throw error;
+      const [goalsData, statusData] = await Promise.all([
+        getGoals(),
+        getStatus()
+      ]);
+      setGoals(goalsData);
+      setStatus(statusData);
+    } catch (err) {
+      setError(err instanceof Error ? err : new Error('Failed to load goals'));
+    } finally {
+      setLoading(false);
     }
-  }, [user, status]);
+  }
+
+  const updateGoalProgress = async (goalId: string, newValue: number) => {
+    try {
+      await updateGoalStatus(goalId, newValue);
+      setStatus(prev => ({
+        ...prev,
+        [goalId]: newValue
+      }));
+    } catch (err) {
+      throw err instanceof Error ? err : new Error('Failed to update goal progress');
+    }
+  };
+
+  const addNewGoal = async (goalData: Omit<Goal, 'id'>) => {
+    try {
+      const newGoal = await addGoalToStorage(goalData);
+      setGoals(prev => [...prev, newGoal]);
+      setStatus(prev => ({
+        ...prev,
+        [newGoal.id]: goalData.start
+      }));
+      return newGoal;
+    } catch (err) {
+      throw err instanceof Error ? err : new Error('Failed to add goal');
+    }
+  };
+
+  const removeGoal = async (goalId: string) => {
+    try {
+      await removeGoalFromStorage(goalId);
+      setGoals(prev => prev.filter(goal => goal.id !== goalId));
+      setStatus(prev => {
+        const newStatus = { ...prev };
+        delete newStatus[goalId];
+        return newStatus;
+      });
+    } catch (err) {
+      throw err instanceof Error ? err : new Error('Failed to remove goal');
+    }
+  };
 
   return {
     goals,
     status,
     loading,
     error,
-    updateGoalProgress
+    updateGoalProgress,
+    addNewGoal,
+    removeGoal,
   };
 }

@@ -1,16 +1,16 @@
 export interface Goal {
   id: string;
   title: string;
-  start: number;
   goal: number;
+  start: number;
 }
 
-export interface GoalStatus {
-  [key: string]: number;
-}
-
-export interface YearProgress {
-  dayOfYear: number;
-  yearProgress: number;
-  currentMonth: number;
+export interface ProgressLog {
+  id?: number;
+  goalId: string;
+  goalTitle: string;
+  value: number;
+  date: string;
+  notes: string;
+  type: 'increment' | 'decrement';
 }
