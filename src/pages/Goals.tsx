@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useGoals } from '../hooks/useGoals';
 import { Goal } from '../types/goals';
 import ProgressBar from '../ProgressBar';
@@ -25,11 +25,18 @@ interface AddGoalFormData {
 export function Goals() {
   const { goals = [], status = {}, updateGoalProgress, addNewGoal, removeGoal, loading: goalsLoading, error: goalsError } = useGoals();
   const [showAddForm, setShowAddForm] = useState(false);
+  const titleInputRef = useRef<HTMLInputElement>(null);
   const [formData, setFormData] = useState<AddGoalFormData>({
     title: '',
     goal: 0,
     start: 0
   });
+
+  useEffect(() => {
+    if (showAddForm && titleInputRef.current) {
+      titleInputRef.current.focus();
+    }
+  }, [showAddForm]);
 
   const handleProgressIncrement = async (e: React.MouseEvent, goalId: string) => {
     e.preventDefault();
@@ -199,63 +206,71 @@ export function Goals() {
                 );
               })}
             </ul>
-            {!showAddForm ? (
-              <button 
-                className="add-goal-button"
-                onClick={() => setShowAddForm(true)}
-              >
-                Add Goal
-              </button>
-            ) : (
-              <div className="inline-add-goal-form">
-                <div className="form-row">
+          </div>
+        )}
+        
+        {!showAddForm ? (
+          <button 
+            className="add-goal-button"
+            onClick={() => setShowAddForm(true)}
+          >
+            Add Goal
+          </button>
+        ) : (
+          <div className="inline-add-goal-form">
+            <form onSubmit={(e) => {
+              e.preventDefault();
+              handleAddGoal();
+            }}>
+              <div className="form-row">
+                <input
+                  ref={titleInputRef}
+                  type="text"
+                  value={formData.title}
+                  onChange={e => setFormData(prev => ({ ...prev, title: e.target.value }))}
+                  placeholder="Goal Title"
+                  required
+                />
+                <div className="range-inputs">
+                  <span className="range-label">From</span>
                   <input
-                    type="text"
-                    value={formData.title}
-                    onChange={e => setFormData(prev => ({ ...prev, title: e.target.value }))}
-                    placeholder="Goal Title"
+                    type="number"
+                    value={formData.start}
+                    onChange={e => setFormData(prev => ({ ...prev, start: parseInt(e.target.value) || 0 }))}
+                    placeholder="0"
                     required
+                    min="0"
                   />
-                  <div className="range-inputs">
-                    <span className="range-label">From</span>
-                    <input
-                      type="number"
-                      value={formData.start}
-                      onChange={e => setFormData(prev => ({ ...prev, start: parseInt(e.target.value) || 0 }))}
-                      placeholder="0"
-                      required
-                      min="0"
-                    />
-                    <span className="range-label">To</span>
-                    <input
-                      type="number"
-                      value={formData.goal}
-                      onChange={e => setFormData(prev => ({ ...prev, goal: parseInt(e.target.value) || 0 }))}
-                      placeholder="100"
-                      required
-                      min="1"
-                    />
-                  </div>
-                </div>
-                <div className="form-actions">
-                  <button 
-                    className="submit-button"
-                    onClick={handleAddGoal}
-                  >
-                    Save
-                  </button>
-                  <button 
-                    className="cancel-button"
-                    onClick={() => {
-                      setShowAddForm(false);
-                      setFormData({ title: '', goal: 0, start: 0 });
-                    }}
-                  >
-                    Cancel
-                  </button>
+                  <span className="range-label">To</span>
+                  <input
+                    type="number"
+                    value={formData.goal}
+                    onChange={e => setFormData(prev => ({ ...prev, goal: parseInt(e.target.value) || 0 }))}
+                    placeholder="100"
+                    required
+                    min="1"
+                  />
                 </div>
               </div>
-            )}
+              <div className="form-actions">
+                <button 
+                  type="submit"
+                  className="submit-button"
+                >
+                  Save
+                </button>
+                <button 
+                  type="button"
+                  className="cancel-button"
+                  onClick={() => {
+                    setShowAddForm(false);
+                    setFormData({ title: '', goal: 0, start: 0 });
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
           </div>
         )}
       </div>
