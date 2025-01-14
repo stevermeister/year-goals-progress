@@ -374,15 +374,17 @@
 }
 
 .remove-goal-button {
-  margin-left: auto;
   background: transparent;
-  border: none;
   color: rgba(255, 255, 255, 0.5);
-  font-size: 1.2rem;
+  border: none;
   cursor: pointer;
-  padding: 0.2rem 0.5rem;
-  border-radius: 4px;
+  padding: 4px;
+  font-size: 1.2rem;
   line-height: 1;
+  border-radius: 4px;
+  position: absolute;
+  top: 8px;
+  right: 8px;
   transition: all 0.2s;
 }
 

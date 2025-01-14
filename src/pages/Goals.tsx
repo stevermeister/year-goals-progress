@@ -110,17 +110,6 @@ export function Goals() {
                           <span className="current-value">{currentValue}</span>
                           <span className="separator">→</span>
                           <span className="goal-value">{goal.goal}</span>
-                          <button 
-                            className="remove-goal-button"
-                            onClick={() => {
-                              if (window.confirm('Are you sure you want to remove this goal?')) {
-                                removeGoal(goal.id);
-                              }
-                            }}
-                            title="Remove goal"
-                          >
-                            ×
-                          </button>
                         </div>
                       </div>
                       <div className="goal-progress">
@@ -192,6 +181,19 @@ export function Goals() {
                           +1
                         </button>
                       </div>
+                      <button 
+                        className="remove-goal-button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          if (window.confirm('Are you sure you want to remove this goal?')) {
+                            removeGoal(goal.id);
+                          }
+                        }}
+                        title="Remove goal"
+                      >
+                        ×
+                      </button>
                     </div>
                   </li>
                 );
