@@ -1,6 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Goal } from '../types/goals';
-import { getGoals, getStatus, addGoal as addGoalToStorage, updateGoalStatus, removeGoal as removeGoalFromStorage } from '../services/storageService';
+import { 
+  getGoals, 
+  getStatus, 
+  addGoal as addGoalToStorage, 
+  updateGoalStatus, 
+  removeGoal as removeGoalFromStorage,
+  clearAllData 
+} from '../services/storageService';
 
 export function useGoals() {
   const [goals, setGoals] = useState<Goal[]>([]);
@@ -67,6 +74,16 @@ export function useGoals() {
     }
   };
 
+  const clearAllGoals = async () => {
+    try {
+      await clearAllData();
+      setGoals([]);
+      setStatus({});
+    } catch (err) {
+      throw err instanceof Error ? err : new Error('Failed to clear all data');
+    }
+  };
+
   return {
     goals,
     status,
@@ -75,5 +92,7 @@ export function useGoals() {
     updateGoalProgress,
     addNewGoal,
     removeGoal,
+    setGoals,
+    clearAllGoals
   };
 }

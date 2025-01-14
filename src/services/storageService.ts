@@ -76,3 +76,16 @@ export async function removeGoal(goalId: string): Promise<void> {
   await tx.objectStore(STATUS_STORE).delete(goalId);
   await tx.done;
 }
+
+export async function clearAllData(): Promise<void> {
+  const db = await initDB();
+  const tx = db.transaction([GOALS_STORE, STATUS_STORE, PROGRESS_LOGS_STORE], 'readwrite');
+  
+  await Promise.all([
+    tx.objectStore(GOALS_STORE).clear(),
+    tx.objectStore(STATUS_STORE).clear(),
+    tx.objectStore(PROGRESS_LOGS_STORE).clear(),
+  ]);
+  
+  await tx.done;
+}

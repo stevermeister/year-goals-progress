@@ -23,7 +23,17 @@ interface AddGoalFormData {
 }
 
 export function Goals() {
-  const { goals = [], status = {}, updateGoalProgress, addNewGoal, removeGoal, loading: goalsLoading, error: goalsError } = useGoals();
+  const { 
+    goals = [], 
+    status = {}, 
+    updateGoalProgress, 
+    addNewGoal, 
+    removeGoal, 
+    loading: goalsLoading, 
+    error: goalsError, 
+    setGoals,
+    clearAllGoals 
+  } = useGoals();
   const [showAddForm, setShowAddForm] = useState(false);
   const titleInputRef = useRef<HTMLInputElement>(null);
   const [formData, setFormData] = useState<AddGoalFormData>({
@@ -209,14 +219,7 @@ export function Goals() {
           </div>
         )}
         
-        {!showAddForm ? (
-          <button 
-            className="add-goal-button"
-            onClick={() => setShowAddForm(true)}
-          >
-            Add Goal
-          </button>
-        ) : (
+        {showAddForm && (
           <div className="inline-add-goal-form">
             <form onSubmit={(e) => {
               e.preventDefault();
@@ -273,6 +276,106 @@ export function Goals() {
             </form>
           </div>
         )}
+        <div className="data-actions">
+          <a 
+            className="data-action-link" 
+            onClick={() => {
+              const fileInput = document.createElement('input');
+              fileInput.type = 'file';
+              fileInput.accept = '.json';
+              fileInput.onchange = async (e) => {
+                const file = (e.target as HTMLInputElement).files?.[0];
+                if (file) {
+                  try {
+                    const text = await file.text();
+                    const importedData = JSON.parse(text);
+                    
+                    // Validate imported data structure
+                    if (!Array.isArray(importedData)) {
+                      throw new Error('Invalid goals format');
+                    }
+                    
+                    // Transform and validate each goal object
+                    const transformedGoals = importedData.map(goal => {
+                      if (!goal.id || !goal.title || (typeof goal.goal !== 'number' && typeof goal.goalValue !== 'number')) {
+                        throw new Error('Invalid goal data structure');
+                      }
+
+                      // Handle both old and new formats
+                      return {
+                        id: goal.id,
+                        title: goal.title,
+                        startValue: goal.startValue ?? goal.start ?? 0,
+                        currentValue: goal.currentValue ?? goal.start ?? 0,
+                        goalValue: goal.goalValue ?? goal.goal
+                      };
+                    });
+                    
+                    localStorage.setItem('goals', JSON.stringify(transformedGoals));
+                    setGoals(transformedGoals);
+                  } catch (err) {
+                    console.error('Import error:', err);
+                    alert('Invalid file format. Please make sure it\'s a valid goals JSON file.');
+                  }
+                }
+              };
+              fileInput.click();
+            }}
+          >
+            Import Goals
+          </a>
+          <a 
+            className="data-action-link"
+            onClick={() => {
+              if (!goals.length) {
+                alert('No goals to export');
+                return;
+              }
+              
+              try {
+                const exportGoals = goals.map(goal => ({
+                  id: goal.id,
+                  title: goal.title,
+                  startValue: goal.startValue,
+                  currentValue: goal.currentValue,
+                  goalValue: goal.goalValue
+                }));
+                
+                const goalsJson = JSON.stringify(exportGoals, null, 2);
+                const blob = new Blob([goalsJson], { type: 'application/json' });
+                const url = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                const date = new Date().toISOString().split('T')[0];
+                
+                link.href = url;
+                link.download = `goals-${date}.json`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(url);
+              } catch (err) {
+                console.error('Export error:', err);
+                alert('Failed to export goals');
+              }
+            }}
+          >
+            Export Goals
+          </a>
+          <a 
+            className="data-action-link danger"
+            onClick={async () => {
+              if (window.confirm('Are you sure you want to remove all goals? This action cannot be undone.')) {
+                try {
+                  await clearAllGoals();
+                } catch (err) {
+                  alert('Failed to remove all data');
+                }
+              }
+            }}
+          >
+            Remove All Data
+          </a>
+        </div>
       </div>
     </div>
   );
