@@ -7,7 +7,7 @@ function App(): JSX.Element {
     <Router>
       <div className="App">
         <div className="app-header">
-          <h1>Year Goals Progress</h1>
+          <h1 className="app-title">YeGo <span>- Year Goals Tracker</span></h1>
         </div>
         <Routes>
           <Route path="/" element={<Goals />} />
