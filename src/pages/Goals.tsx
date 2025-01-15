@@ -7,13 +7,15 @@ import './Goals.css';
 
 export function getProgress(goal: Goal, current: number): number {
   // For decreasing goals (target < start)
-  if (goal.goal < goal.start) {
-    return ((goal.start - current) / (goal.start - goal.goal)) * 100;
+  if (goal.goalValue < goal.startValue) {
+    const range = goal.startValue - goal.goalValue;
+    const progress = goal.startValue - current;
+    return Math.min(100, Math.max(0, (progress / range) * 100));
   }
   // For increasing goals (target > start)
-  const range = goal.goal - goal.start;
-  const progress = current - goal.start;
-  return (progress / range) * 100;
+  const range = goal.goalValue - goal.startValue;
+  const progress = current - goal.startValue;
+  return Math.min(100, Math.max(0, (progress / range) * 100));
 }
 
 interface AddGoalFormData {
