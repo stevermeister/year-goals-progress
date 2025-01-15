@@ -284,7 +284,8 @@
 
 @media (max-width: 600px) {
   .goal-item {
-    padding: 0.75rem;
+    padding: 1rem;
+    position: relative;
   }
 
   .goal-content {
@@ -309,15 +310,26 @@
   }
 
   .progress-buttons-overlay {
-    position: static;
-    transform: none;
-    margin-top: 0.5rem;
-    justify-content: flex-end;
+    position: absolute;
+    opacity: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .goal-item:hover .progress-buttons-overlay {
+    opacity: 1;
+  }
+
+  .progress-buttons {
+    gap: 0.5rem;
   }
 
   .add-progress-button {
-    width: 28px;
-    height: 28px;
+    padding: 8px;
+    min-width: 36px;
+    height: 36px;
     font-size: 0.9rem;
   }
 }
